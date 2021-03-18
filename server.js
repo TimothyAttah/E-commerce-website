@@ -8,7 +8,7 @@ app.use( express.json() );
 app.use( cors() );
 
 app.get( '/', ( req, res ) => {
-  res.send( 'Hello wonderful people!!!' );
+  res.send( 'Hello wonderful people!!! How are you doing today' );
 } );
 
 if ( process.env.NODE_ENV === 'production' ) {
