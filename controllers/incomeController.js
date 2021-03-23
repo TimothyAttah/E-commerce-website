@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const Income = require( '../models/IncomeBudgets' );
 
 const getIncome = async ( req, res ) => {
@@ -10,16 +11,30 @@ const getIncome = async ( req, res ) => {
 }
 
 const createIncome = async ( req, res ) => {
+  const incomes = req.body;
   try {
-    const  incomes = req.body;
-    const data = await new Income( incomes );
-    await data.save();
-    res.status( 201 ).json( { message: 'Income created successfully', data } );
+    if ( !incomes ) return res.status( 404 ).json( { error: 'Please fill in all fields' } );
+    const newIncome = await new Income( incomes );
+    await newIncome.save();
+    res.status( 201 ).json( { message: 'Income created successfully', data: newIncome } );
   } catch (error) {
     res.status( 500 ).json( { error: error.message } );
   }
 }
 
 
+const editIncome = async ( req, res ) => {
+  const { id: _id } = req.params;
+  const incomes = req.body;
+  try {
+    if ( !mongoose.Types.ObjectId.isValid( _id ) ) return res.status( 404 ).json( { error: 'No income with that id' } );
+    const updatedIncome = await Income.findByIdAndUpdate( _id, incomes, { new: true } );
+    res.status( 201 ).json( { message: 'Income updated successfully!!!', data: updatedIncome } );
+  } catch (error) {
+    res.status( 500 ).json( { error: error.message } );
+  }
+}
+
 module.exports.getIncome = getIncome;
 module.exports.createIncome = createIncome;
+module.exports.editIncome = editIncome;
