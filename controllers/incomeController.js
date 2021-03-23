@@ -35,6 +35,18 @@ const editIncome = async ( req, res ) => {
   }
 }
 
+const deleteIncome = async ( req, res ) => {
+  const { id: _id } = req.params;
+  try {
+    if ( !mongoose.Types.ObjectId.isValid( _id ) ) return res.status( 404 ).json( { error: 'No income with that id' } );
+    await Income.findByIdAndRemove( _id );
+    res.status(201).json({message: 'Income deleted successfully!!!'})
+  } catch (error) {
+    res.status( 500 ).json( { error: error.message } );
+  }
+}
+
 module.exports.getIncome = getIncome;
 module.exports.createIncome = createIncome;
 module.exports.editIncome = editIncome;
+module.exports.deleteIncome = deleteIncome;
