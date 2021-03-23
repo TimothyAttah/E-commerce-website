@@ -1,11 +1,16 @@
+const dotenv = require( 'dotenv' );
+dotenv.config( { path: './config/.env' } );
 const express = require( 'express' );
 const cors = require( 'cors' );
 const path = require( 'path' );
 
 const app = express();
+const connectDB = require( './config/db' );
 
+connectDB();
 app.use( express.json() );
 app.use( cors() );
+
 
 app.get( '/', ( req, res ) => {
   res.send( 'Hello wonderful people!!! How are you doing today' );
