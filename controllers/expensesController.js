@@ -34,6 +34,18 @@ const editExpenses = async ( req, res ) => {
   }
 }
 
+const deleteExpenses = async ( req, res ) => {
+  const { id } = req.params;
+  try {
+    if ( !mongoose.Types.ObjectId.isValid( id ) ) return res.status( 404 ).json( { error: 'There is no expenses with that id' } );
+    await Expenses.findByIdAndRemove( id )
+    res.status( 201 ).json( { message: 'Expenses delete successfully!!!' } );
+  } catch (error) {
+    res.status( 500 ).json( { error: error.message } );
+  }
+}
+
 module.exports.getExpenses = getExpenses;
 module.exports.createExpenses = createExpenses;
 module.exports.editExpenses = editExpenses;
+module.exports.deleteExpenses = deleteExpenses;
