@@ -22,5 +22,18 @@ const createExpenses = async ( req, res ) => {
   }
 }
 
+const editExpenses = async ( req, res ) => {
+  const { id: _id } = req.params;
+  const expenses = req.body;
+  try {
+    if ( !mongoose.Types.ObjectId.isValid( _id ) ) return res.status( 404 ).json( { error: 'There is no expenses with that id' } );
+    const updatedExpenses = await Expenses.findByIdAndUpdate( _id, expenses, { new: true } );
+    res.status( 201 ).json( { message: 'Expenses updated successfully!!!', updatedExpenses } );
+  } catch (error) {
+    res.status( 500 ).json( { error: error.message } );
+  }
+}
+
 module.exports.getExpenses = getExpenses;
 module.exports.createExpenses = createExpenses;
+module.exports.editExpenses = editExpenses;
