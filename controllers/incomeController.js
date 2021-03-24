@@ -4,7 +4,7 @@ const Income = require( '../models/IncomeBudgets' );
 const getIncome = async ( req, res ) => {
   try {
     const incomes = await Income.find();
-    res.status( 201 ).json( { message: 'Success', data: incomes } );
+    res.status( 201 ).json( incomes );
   } catch ( error ) {
     res.status( 500 ).json( { error: error.message } );
   };
@@ -16,7 +16,7 @@ const createIncome = async ( req, res ) => {
     if ( !incomes ) return res.status( 404 ).json( { error: 'Please fill in all fields' } );
     const newIncome = await new Income( incomes );
     await newIncome.save();
-    res.status( 201 ).json( { message: 'Income created successfully', data: newIncome } );
+    res.status( 201 ).json( { message: 'Income created successfully', newIncome } );
   } catch ( error ) {
     res.status( 500 ).json( { error: error.message } );
   };
@@ -35,15 +35,15 @@ const editIncome = async ( req, res ) => {
 };
 
 const deleteIncome = async ( req, res ) => {
-  const { id} = req.params;
+  const { id } = req.params;
   try {
     if ( !mongoose.Types.ObjectId.isValid( id ) ) return res.status( 404 ).json( { error: 'No income with that id' } );
-   await Income.findByIdAndRemove( id );
-    console.log('DELETE INCOME');
-    res.status( 201 ).json( { message: 'Income deleted successfully!!!' } );
-  } catch ( error ) {
-    res.status( 500 ).json( { error: error.message } );
-  };
+  await Income.findByIdAndRemove( id );
+  console.log( 'DELETE INCOME' );
+  res.status( 201 ).json( { message: 'Income deleted successfully!!!' } );
+  } catch (error) {
+     res.status( 500 ).json( { error: error.message } );
+  }
 };
 
 module.exports.getIncome = getIncome;
