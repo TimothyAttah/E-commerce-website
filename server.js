@@ -12,6 +12,7 @@ app.use( express.json() );
 app.use( cors() );
 
 app.use( '/api/budgets/incomes', require( './routes/incomeRoutes' ) );
+app.use( '/api/budgets/expenses', require( './routes/expensesRoutes' ) );
 
 
 if ( process.env.NODE_ENV === 'production' ) {
