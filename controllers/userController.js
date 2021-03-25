@@ -1,13 +1,23 @@
-const { json } = require( 'express' );
 const mongoose = require( 'mongoose' );
-const User = require( '../models/user' );
+const bcrypt = require( 'bcryptjs' );
+const User = mongoose.model( 'User' );
 
 const signUpUser = async ( req, res ) => {
   const newUser = req.body;
-  if ( !newUser.firstName || !newUser.lastName || !newUser.email || !newUser.password )
-    return res.status(404).json({error: 'Please fill in all fields'})
+  const { firstName, lastName, email, password } = newUser
+  if ( !firstName || !lastName || !email || !password )
+    return res.status( 404 ).json( { error: 'Please fill in all fields' } )
+  const savedUser = await User.findOne( { email } )
+  if ( savedUser ) return res.status( 404 ).json( { error: 'User with that email already exists.' } );
   try {
-    const users = await new User( newUser );
+    const hashedPassword = await bcrypt.hash( password, 12 );
+    const users = await new User( {
+      firstName,
+      lastName,
+      fullName: {firstName, lastName},
+      email,
+      password: hashedPassword
+    } );
     await users.save();
     res.status(201).json({message: 'User successfully signed up.', users})
   } catch (error) {

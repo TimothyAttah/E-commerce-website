@@ -4,6 +4,8 @@ const express = require( 'express' );
 const cors = require( 'cors' );
 const path = require( 'path' );
 
+require( './models/user' );
+
 const app = express();
 const connectDB = require( './config/db' );
 
@@ -13,7 +15,7 @@ app.use( cors() );
 
 app.use( '/api/budgets/incomes', require( './routes/incomeRoutes' ) );
 app.use( '/api/budgets/expenses', require( './routes/expensesRoutes' ) );
-app.use( '/api/user', require( './routes/userRoutes' ) );
+app.use( '/api/user', require( './routes/authRoute' ) );
 
 
 if ( process.env.NODE_ENV === 'production' ) {
