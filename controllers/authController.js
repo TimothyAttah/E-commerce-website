@@ -49,6 +49,11 @@ const getUser = async ( req, res ) => {
   }
 }
 
+const authUser = async ( req, res ) => {
+  res.send('Hello protected User.')
+}
+
 module.exports.signUpUser = signUpUser;
 module.exports.signInUser = signInUser;
 module.exports.getUser = getUser;
+module.exports.authUser = authUser;
