@@ -3,8 +3,7 @@ const bcrypt = require( 'bcryptjs' );
 const User = mongoose.model( 'User' );
 
 const signUpUser = async ( req, res ) => {
-  const newUser = req.body;
-  const { firstName, lastName, email, password } = newUser
+  const { firstName, lastName, email, password } = req.body;
   if ( !firstName || !lastName || !email || !password )
     return res.status( 404 ).json( { error: 'Please fill in all fields' } )
   const savedUser = await User.findOne( { email } )
@@ -25,6 +24,20 @@ const signUpUser = async ( req, res ) => {
   }
 }
 
+const signInUser = async ( req, res ) => {
+  const { email, password } = req.body;
+  if ( !email || !password ) return res.status( 404 ).json( { error: 'Please fill in all fields' } );
+  const savedUser = await User.findOne( { email } );
+  if ( !savedUser ) return res.status( 404 ).json( { error: 'User with that email does not exists.' } )
+  const exitPassword = await bcrypt.compare( password, savedUser.password );
+  if(!exitPassword) return res.status(404).json({error: 'Password is incorrect'})
+  try {
+    res.status( 201 ).json( { message: 'User successfully logged in.', savedUser } ); 
+  } catch (error) {
+     res.status( 500 ).json( { error: error.message } );
+  }
+}
+
 const getUser = async ( req, res ) => {
   try {
     const users = await User.find();
@@ -35,4 +48,5 @@ const getUser = async ( req, res ) => {
 }
 
 module.exports.signUpUser = signUpUser;
+module.exports.signInUser = signInUser;
 module.exports.getUser = getUser;
