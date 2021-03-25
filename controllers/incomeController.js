@@ -28,7 +28,7 @@ const editIncome = async ( req, res ) => {
   try {
     if ( !mongoose.Types.ObjectId.isValid( _id ) ) return res.status( 404 ).json( { error: 'No income with that id' } );
    const updatedIncome = await Income.findByIdAndUpdate( _id, incomes, { new: true } );
-    res.status( 201 ).json( { message: 'Income updated successfully!!!', data: updatedIncome } );
+    res.status( 201 ).json( { message: 'Income updated successfully!!!',  updatedIncome } );
   } catch ( error ) {
     res.status( 500 ).json( { error: error.message } );
   };
@@ -39,7 +39,6 @@ const deleteIncome = async ( req, res ) => {
   try {
     if ( !mongoose.Types.ObjectId.isValid( id ) ) return res.status( 404 ).json( { error: 'No income with that id' } );
   await Income.findByIdAndRemove( id );
-  console.log( 'DELETE INCOME' );
   res.status( 201 ).json( { message: 'Income deleted successfully!!!' } );
   } catch (error) {
      res.status( 500 ).json( { error: error.message } );
