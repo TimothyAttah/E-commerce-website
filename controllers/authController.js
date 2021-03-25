@@ -1,5 +1,6 @@
 const mongoose = require( 'mongoose' );
 const bcrypt = require( 'bcryptjs' );
+const jwt = require( 'jsonwebtoken' );
 const User = mongoose.model( 'User' );
 
 const signUpUser = async ( req, res ) => {
@@ -32,7 +33,8 @@ const signInUser = async ( req, res ) => {
   const exitPassword = await bcrypt.compare( password, savedUser.password );
   if(!exitPassword) return res.status(404).json({error: 'Password is incorrect'})
   try {
-    res.status( 201 ).json( { message: 'User successfully logged in.', savedUser } ); 
+    const token = await jwt.sign({_id: savedUser._id, }, process.env.JWT_SECRET)
+    res.status( 201 ).json( { message: 'User successfully logged in.', token, savedUser } ); 
   } catch (error) {
      res.status( 500 ).json( { error: error.message } );
   }
