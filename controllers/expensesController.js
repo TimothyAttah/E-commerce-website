@@ -3,12 +3,23 @@ const Expenses = mongoose.model( 'Expenses' );
 
 const getAllExpenses = async ( req, res ) => {
   try {
-    const expenses = await Expenses.find();
+    const expenses = await Expenses.find()
+      .populate( 'postedBy', '-password' );
     res.status( 201 ).json( { message: 'Success', expenses } );
   } catch (error) {
     res.status( 500 ).json( { error: error.message } );
   }
 };
+
+const getAuthExpenses = async ( req, res ) => {
+  try {
+    const authExpenses = await Expenses.find( { postedBy: req.user._id } )
+      .populate( 'postedBy', '-password' )
+    res.status( 201 ).json( authExpenses );
+  } catch (error) {
+     res.status( 500 ).json( { error: error.message } );
+  }
+}
 
 const createExpenses = async ( req, res ) => {
   const expenses = req.body;
@@ -52,6 +63,7 @@ const deleteExpenses = async ( req, res ) => {
 }
 
 module.exports.getAllExpenses = getAllExpenses;
+module.exports.getAuthExpenses = getAuthExpenses;
 module.exports.createExpenses = createExpenses;
 module.exports.editExpenses = editExpenses;
 module.exports.deleteExpenses = deleteExpenses;
