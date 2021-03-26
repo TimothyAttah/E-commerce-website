@@ -1,7 +1,7 @@
 const mongoose = require( 'mongoose' );
 const Income = mongoose.model( 'Incomes' );
 
-const getIncome = async ( req, res ) => {
+const getAllIncome = async ( req, res ) => {
   try {
     const incomes = await Income.find()
     .populate('postedBy', '-password')
@@ -10,6 +10,16 @@ const getIncome = async ( req, res ) => {
     res.status( 500 ).json( { error: error.message } );
   };
 };
+
+const getAuthIncome = async ( req, res ) => {
+  try {
+    const authIncome = await Income.find( { postedBy: req.user._id } )
+      .populate( 'postedBy', '-password' );
+    res.status(201).json(authIncome)
+  } catch (error) {
+    res.status( 500 ).json( { error: error.message } );
+  }
+}
 
 const createIncome = async ( req, res ) => {
   const incomes = req.body;
@@ -52,7 +62,8 @@ const deleteIncome = async ( req, res ) => {
   }
 };
 
-module.exports.getIncome = getIncome;
+module.exports.getAllIncome = getAllIncome;
+module.exports.getAuthIncome = getAuthIncome;
 module.exports.createIncome = createIncome;
 module.exports.editIncome = editIncome;
 module.exports.deleteIncome = deleteIncome;
