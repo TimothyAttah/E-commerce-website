@@ -1,9 +1,10 @@
 const mongoose = require( 'mongoose' );
-const Income = require( '../models/IncomeBudgets' );
+const Income = mongoose.model( 'Incomes' );
 
 const getIncome = async ( req, res ) => {
   try {
-    const incomes = await Income.find();
+    const incomes = await Income.find()
+    .populate('postedBy', '-password')
     res.status( 201 ).json( incomes );
   } catch ( error ) {
     res.status( 500 ).json( { error: error.message } );
@@ -12,9 +13,15 @@ const getIncome = async ( req, res ) => {
 
 const createIncome = async ( req, res ) => {
   const incomes = req.body;
+  const { content, values } = incomes;
   try {
-    if ( !incomes ) return res.status( 404 ).json( { error: 'Please fill in all fields' } );
-    const newIncome = await new Income( incomes );
+    if ( !content || !values ) return res.status( 404 ).json( { error: 'Please fill in all fields' } );
+    req.user.password = undefined
+    const newIncome = await new Income( {
+      content,
+      values,
+      postedBy: req.user
+    } );
     await newIncome.save();
     res.status( 201 ).json( { message: 'Income created successfully', newIncome } );
   } catch ( error ) {
