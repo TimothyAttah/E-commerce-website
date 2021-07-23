@@ -5,4 +5,8 @@ router.post( '/create', postControllers.createPost );
 
 router.put( '/update/:id', postControllers.updatePost );
 
+router.delete( '/delete/:id', postControllers.deletePost );
+
+router.put( '/:id/like', postControllers.likePost );
+
 module.exports = router;
