@@ -58,10 +58,36 @@
 // module.exports.getUser = getUser;
 // module.exports.authUser = authUser;
 
+const bcrypt = require( 'bcryptjs' );
+const User = require('../models/user')
+
 
 const authControllers = {
-  getAuth: async ( req, res ) => {
-    res.send('hellow welcome to auth users')
+  // REGISTER USER
+  registerUser: async ( req, res ) => {
+   try {
+      const { firstName, lastName, email, password } = req.body;
+			if (!firstName || !lastName || !email || !password)
+				return res.status(422).json({ error: 'Please fill in all fields.' });
+
+			const exitsUser = await User.findOne({ email });
+			if (exitsUser)
+				return res
+					.status(400)
+					.json({ error: 'The user with this email already exist' });
+
+			const hashedPassword = await bcrypt.hash(password, 12);
+     const users = await new User( {
+       firstName,
+       lastName,
+       email,
+       password: hashedPassword
+     } );
+     await users.save()
+      res.status(201).json({ message: 'User successfully signed up.', users });
+   } catch (err) {
+     res.status(500).json({error: err})
+   }
   }
 }
 
