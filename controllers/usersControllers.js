@@ -45,8 +45,18 @@ const userControllers = {
 				.status(403)
 				.json({ error: 'You can delete only your account!' });
 		}
-	},
+  },
+  
 	// GET A USER
+  getUser: async ( req, res ) => {
+    try {
+      const user = await User.findById( req.params.id );
+      const {password, updatedAt, ...other} = user._doc
+      	res.status(200).json({ message: 'My Account. ', user: other});
+    } catch (err) {
+      return res.status(500).json({ error: err });
+    }
+  }
 	// FOLLOW A USER
 	// UNFOLLOW A USER
 };
