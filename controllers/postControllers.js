@@ -1,4 +1,5 @@
 const Post = require( '../models/PostModel' );
+const User = require( '../models/UserModel' );
 
 const postControllers = {
 	// CREATE A POST
@@ -79,8 +80,23 @@ const postControllers = {
     } catch (err) {
       	return res.status(500).json({ error: err });
     }
-  }
+  },
+
 	// GET TIMELINE POSTS
+  timelinePost: async ( req, res ) => {
+    try {
+      const currentUser = await User.findById( req.body.userId )
+      const userPosts = await Post.find( { userId: currentUser._id } )
+      const friendPosts = await Promise.all(
+        currentUser.followings.map( friendId => {
+         return Post.find({userId: friendId})
+        })
+      )
+      res.json(userPosts.concat(...friendPosts))
+    } catch (err) {
+      	return res.status(500).json({ error: err });
+    }
+  }
 };
 
 module.exports = postControllers;

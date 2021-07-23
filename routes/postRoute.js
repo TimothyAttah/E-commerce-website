@@ -11,4 +11,6 @@ router.put( '/:id/like', postControllers.likePost );
 
 router.get( '/:id', postControllers.getPost );
 
+router.get( '/timeline/posts', postControllers.timelinePost );
+
 module.exports = router;
