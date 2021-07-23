@@ -9,5 +9,7 @@ router.get( '/:id', userControllers.getUser );
 
 router.put( '/:id/follow', userControllers.followUsers );
 
+router.put( '/:id/unfollow', userControllers.unfollowUsers );
+
 
 module.exports = router;

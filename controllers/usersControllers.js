@@ -31,7 +31,7 @@ const userControllers = {
 
 	// DELETE USER
 	deleteUser: async (req, res) => {
-		const {userId, isAdmin } = req.body;
+		const { userId, isAdmin } = req.body;
 
 		if (userId === req.params.id || isAdmin) {
 			try {
@@ -45,41 +45,68 @@ const userControllers = {
 				.status(403)
 				.json({ error: 'You can delete only your account!' });
 		}
-  },
-  
+	},
+
 	// GET A USER
-  getUser: async ( req, res ) => {
-    try {
-      const user = await User.findById( req.params.id );
-      const {password, updatedAt, ...other} = user._doc
-      	res.status(200).json({ message: 'My Account. ', user: other});
-    } catch (err) {
-      return res.status(500).json({ error: err });
-    }
-  },
+	getUser: async (req, res) => {
+		try {
+			const user = await User.findById(req.params.id);
+			const { password, updatedAt, ...other } = user._doc;
+			res.status(200).json({ message: 'My Account. ', user: other });
+		} catch (err) {
+			return res.status(500).json({ error: err });
+		}
+	},
 
 	// FOLLOW A USER
-  followUsers: async ( req, res ) => {
-    if ( req.body.userId !== req.params.id ) {
-      try {
-        const user = await User.findById( req.params.id );
-        const currentUser = await User.findById( req.params.id );
-        if ( !user.followers.includes( req.body.userId ) ) {
-          await user.updateOne( { $push: { followers: req.body.userId } } );
-          await currentUser.updateOne( { $push: { followings: req.body.params.id } } );
-          	res.status(200).json({ message: 'User has been followed.' });
+	followUsers: async (req, res) => {
+		if (req.body.userId !== req.params.id) {
+			try {
+				const user = await User.findById(req.params.id);
+				const currentUser = await User.findById(req.params.id);
+				if (!user.followers.includes(req.body.userId)) {
+					await user.updateOne({ $push: { followers: req.body.userId } });
+					await currentUser.updateOne({
+						$push: { followings: req.body.params.id },
+					});
+					res.status(200).json({ message: 'User has been followed.' });
 				} else {
-					return res.status(403).json({ error: "You already follow this user" });
+					return res
+						.status(403)
+						.json({ error: 'You already follow this user' });
 				}
-				} catch (err) {
-					return res.status(500).json({ error: err });
-				}
-    } else {
-       return res.status(403).json({ error: 'You can\'t follow yourself' });
-    }
-   
-  }
+			} catch (err) {
+				return res.status(500).json({ error: err });
+			}
+		} else {
+			return res.status(403).json({ error: "You can't follow yourself" });
+		}
+	},
+
 	// UNFOLLOW A USER
+	unfollowUsers: async (req, res) => {
+		if (req.body.userId !== req.params.id) {
+			try {
+				const user = await User.findById(req.params.id);
+				const currentUser = await User.findById(req.params.id);
+				if (user.followers.includes(req.body.userId)) {
+					await user.updateOne({ $pull: { followers: req.body.userId } });
+					await currentUser.updateOne({
+						$pull: { followings: req.body.params.id },
+					});
+					res.status(200).json({ message: 'User has been unfollow.' });
+				} else {
+					return res
+						.status(403)
+						.json({ error: 'You don\'t this user' });
+				}
+			} catch (err) {
+				return res.status(500).json({ error: err });
+			}
+		} else {
+			return res.status(403).json({ error: "You can't unfollow yourself" });
+		}
+	},
 };
 
 module.exports = userControllers;
