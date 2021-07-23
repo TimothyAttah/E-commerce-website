@@ -71,6 +71,15 @@ const postControllers = {
   },
 
 	// GET A POST
+  getPost: async ( req, res ) => {
+    try {
+      const post = await Post.findById( req.params.id );
+      	res.status(200).json({ message: 'My post.', post });
+      
+    } catch (err) {
+      	return res.status(500).json({ error: err });
+    }
+  }
 	// GET TIMELINE POSTS
 };
 

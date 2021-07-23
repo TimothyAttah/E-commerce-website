@@ -9,4 +9,6 @@ router.delete( '/delete/:id', postControllers.deletePost );
 
 router.put( '/:id/like', postControllers.likePost );
 
+router.get( '/:id', postControllers.getPost );
+
 module.exports = router;
