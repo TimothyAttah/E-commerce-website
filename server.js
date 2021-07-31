@@ -15,7 +15,7 @@ app.use( cors() );
 
 app.use( '/api/auth', require( './routes/authRoute' ) );
 app.use( '/api/users', require( './routes/usersRoute' ) );
-app.use( '/api/post', require( './routes/postRoute' ) );
+app.use( '/api/posts', require( './routes/postRoute' ) );
 
 if ( process.env.NODE_ENV === 'production' ) {
   app.use( express.static( 'client/build' ) );
