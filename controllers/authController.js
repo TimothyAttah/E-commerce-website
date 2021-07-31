@@ -84,7 +84,8 @@ const authControllers = {
 			if (!validPassword)
 				return res
 					.status(400)
-					.json({ error: 'Email or password is Incorrect.' });
+					.json( { error: 'Email or password is Incorrect.' } );
+			user.password = undefined;
 				res
 					.status(201)
 					.json({ message: 'User successfully logged in.', user });
