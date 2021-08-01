@@ -1,3 +1,4 @@
+const { decodeBase64 } = require( 'bcryptjs' );
 const mongoose = require( 'mongoose' );
 
 const UserSchema = new mongoose.Schema( {
@@ -65,3 +66,22 @@ const UserSchema = new mongoose.Schema( {
 
 // mongoose.model( 'User', UserSchema );
 module.exports = mongoose.model( 'User', UserSchema );
+
+// db.users.insert({
+// 	profilePicture: '',
+// 	coverPicture: '',
+// 	followers: [],
+// 	followings: [],
+// 	isAdmin: false,
+// 	firstName: 'Vivian',
+// 	lastName: 'Angel',
+// 	email: 'vivian@gmail.com',
+// 	password: '$2a$12$5re0u1mxM4opmueDFwpjHemvOPA2dmiHzPw8XBhPU1Ng0Ndmr7qsi',
+// 	city: 'Nigeria',
+// 	from: 'Lagos',
+// 	relationship: 1,
+// 	desc: 'Hello wonderful people',
+// 	createdAt: ISODate('2021-08-01T07:38:29.592Z'),
+// 	updatedAt: ISODate('2021-08-01T07:38:29.592Z'),
+// 	__v: 0,
+// });

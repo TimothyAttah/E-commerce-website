@@ -10,6 +10,9 @@ const app = express();
 const connectDB = require( './config/db' );
 
 connectDB();
+app.use( '/images', express.static( path.join( __dirname, 'public/images' ) ) );
+
+
 app.use( express.json() );
 app.use( cors() );
 

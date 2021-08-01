@@ -92,7 +92,17 @@ const postControllers = {
          return Post.find({userId: friendId})
         })
       )
-      res.json(userPosts.concat(...friendPosts))
+      res.status(200).json(userPosts.concat(...friendPosts))
+    } catch (err) {
+      	return res.status(500).json({ error: err });
+    }
+  },
+	// GET USERS ALL POSTS
+  userAllPosts: async ( req, res ) => {
+		try {
+			const user = await User.findOne({firstName: req.params.username})
+			const posts = await Post.find( { userId: user._id } );
+			res.status( 200 ).json( { message: 'Users all posts', posts } );
     } catch (err) {
       	return res.status(500).json({ error: err });
     }

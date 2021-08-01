@@ -48,11 +48,25 @@ const userControllers = {
 	},
 
 	// GET A USER
-	getUser: async (req, res) => {
+	// getUser: async ( req, res ) => {
+	// 	const userId = req.query.userId;
+	// 	const firstName = req.query.firstName;
+	// 	try {
+	// 		const user = userId
+	// 			? await User.findById( userId )
+	// 			: await User.findOne( { username: firstName } );
+	// 		const { password, updatedAt, ...other } = user._doc;
+	// 		res.status(200).json({ message: 'My Account. ', other });
+	// 	} catch (err) {
+	// 		return res.status(500).json({ error: err });
+	// 	}
+	// },
+
+	getUser: async ( req, res ) => {
 		try {
-			const user = await User.findById(req.params.id);
+			const user = await User.findById( req.params.id );
 			const { password, updatedAt, ...other } = user._doc;
-			res.status(200).json({ message: 'My Account. ', user: other });
+			res.status(200).json({ message: 'My Account. ', other });
 		} catch (err) {
 			return res.status(500).json({ error: err });
 		}
