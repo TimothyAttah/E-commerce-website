@@ -5,7 +5,7 @@ router.put( '/update/:id', userControllers.updateUser );
 
 router.delete( '/delete/:id', userControllers.deleteUser );
 
-router.get( '/:id', userControllers.getUser );
+router.get( '/', userControllers.getUser );
 
 router.put( '/:id/follow', userControllers.followUsers );
 
