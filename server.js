@@ -11,11 +11,13 @@ const connectDB = require( './config/db' );
 
 connectDB();
 
+app.use( '/images', express.static( path.join( __dirname, 'public/images' ) ) );
 
 app.use( express.json() );
+// app.use(express.json({limit: }))
 app.use( cors() );
 
-app.use( '/images', express.static( path.join( __dirname, 'public/images' ) ) );
+// app.use( '/images', express.static( path.join( __dirname, 'client', 'public', '/assets/images' ) ) );
 
 const storage = multer.diskStorage( {
   destination: ( req, file, cb ) => {

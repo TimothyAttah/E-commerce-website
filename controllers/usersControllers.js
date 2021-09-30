@@ -72,12 +72,32 @@ const userControllers = {
 	// 	}
 	// },
 
+	// GET FRIENDS
+	getFriends: async ( req, res ) => {
+		try {
+			const user = await User.findById( req.params.userId );
+			const friends = await Promise.all(
+				user.followings.map( friendId => {
+					return User.findById(friendId)
+				})
+			)
+			let friendList = [];
+			friends.map( friend => {
+				const { _id, firstName, lastName, profilePicture } = friend;
+				friendList.push( { _id, firstName, lastName, profilePicture } );
+			} );
+			res.status( 200 ).json( friendList );
+		} catch (err) {
+			return res.status(500).json({ error: err });
+		}
+	},
+
 	// FOLLOW A USER
 	followUsers: async (req, res) => {
 		if (req.body.userId !== req.params.id) {
 			try {
 				const user = await User.findById(req.params.id);
-				const currentUser = await User.findById(req.params.id);
+				const currentUser = await User.findById(req.body.userId);
 				if (!user.followers.includes(req.body.userId)) {
 					await user.updateOne({ $push: { followers: req.body.userId } });
 					await currentUser.updateOne({
@@ -102,7 +122,8 @@ const userControllers = {
 		if (req.body.userId !== req.params.id) {
 			try {
 				const user = await User.findById(req.params.id);
-				const currentUser = await User.findById(req.params.id);
+				// const currentUser = await User.findById(req.params.id);
+				const currentUser = await User.findById(req.body.userId);
 				if (user.followers.includes(req.body.userId)) {
 					await user.updateOne({ $pull: { followers: req.body.userId } });
 					await currentUser.updateOne({
